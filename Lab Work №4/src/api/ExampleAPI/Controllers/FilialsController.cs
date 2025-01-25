@@ -31,6 +31,11 @@ namespace ExampleAPI.Controllers
 		[HttpGet("{id}/settlements")]
 		public async Task<ActionResult> GetSettlements(int id)
 		{
+			var filial = await _context.Filials.Where(x => x.ID == id).FirstOrDefaultAsync();
+
+			if (filial == null)
+				return NotFound();
+
 			return Ok(new
 			{
 				settlements = await _context.Settlements.Where(x => x.Filial.ID == id).Select(x => new SettlementDto()
