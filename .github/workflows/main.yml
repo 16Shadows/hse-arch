@@ -10,5 +10,9 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
-      - name: Try to start up containers
-        run: cd "Lab Work №5/src/api" && docker compose up
+      - name: CD into source folder
+        run: cd "Lab Work №5/src/api"
+      - name: Start docker containers
+        run: docker compose up &
+      - name: Run integration tests
+        run: ./test.sh
