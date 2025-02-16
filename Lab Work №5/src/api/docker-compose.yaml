@@ -5,7 +5,7 @@ services:
       context: ./ExampleAPI
       dockerfile: Dockerfile
     ports:
-      - "80:8080"
+      - "8080:80"
     networks:
       - hse-arch
     environment:
