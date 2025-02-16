@@ -11,4 +11,4 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
       - name: Try to start up containers
-        run: cd "Lab Work №5/src/api" && docker-compose up
+        run: cd "Lab Work №5/src/api" && docker compose up
