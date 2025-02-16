@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace ExampleAPI.Model
 {
@@ -12,10 +12,14 @@ namespace ExampleAPI.Model
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			SqliteConnectionStringBuilder sb = new SqliteConnectionStringBuilder();
-			sb.DataSource = "./database.db";
+			NpgsqlConnectionStringBuilder sb = new NpgsqlConnectionStringBuilder();
+			sb.Host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
+			sb.Port = int.Parse(Environment.GetEnvironmentVariable("POSTGRES_PORT") ?? "5432");
+			sb.Username = Environment.GetEnvironmentVariable("POSTGRES_USER");
+			sb.Password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+			sb.Database = Environment.GetEnvironmentVariable("POSTGRES_DATABASE"); 
 
-			optionsBuilder.UseSqlite(sb.ToString());
+			optionsBuilder.UseNpgsql(sb.ToString());
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

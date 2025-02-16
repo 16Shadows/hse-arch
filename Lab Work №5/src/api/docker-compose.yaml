@@ -1,0 +1,52 @@
+services:
+  server:
+    container_name: example-api
+    build:
+      context: ./ExampleAPI
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
+      - "80:80"
+    networks:
+      - hse-arch
+    environment:
+      POSTGRES_DATABASE: ExampleAPI
+      POSTGRES_HOST: postgres-example-api
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ExampleAPI
+    depends_on:
+      postgres-example-api:
+        condition: service_healthy
+  postgres-example-api:
+    container_name: postgres-example-api
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ExampleAPI
+      POSTGRES_USER: ExampleAPI
+      POSTGRES_PASSWORD: 123456
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./ExampleAPI/MigrationScripts:/docker-entrypoint-initdb.d
+      - hse-arch-postgres-example-api-db:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U ExampleAPI -d ExampleAPI
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - hse-arch
+
+volumes:
+  hse-arch-postgres-example-api-db: 
+     
+networks:
+  hse-arch:
+    driver: bridge

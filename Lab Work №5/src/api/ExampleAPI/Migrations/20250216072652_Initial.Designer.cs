@@ -5,31 +5,38 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace ExampleAPI.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250119145714_initial")]
-    partial class initial
+    [Migration("20250216072652_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.20");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "7.0.20")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("ExampleAPI.Model.Filial", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -40,12 +47,14 @@ namespace ExampleAPI.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -56,15 +65,17 @@ namespace ExampleAPI.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("FilialID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -77,29 +88,31 @@ namespace ExampleAPI.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Author")
                         .IsRequired()
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("FilialID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("HousingTypeID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("ID");
 
@@ -113,10 +126,10 @@ namespace ExampleAPI.Migrations
             modelBuilder.Entity("SettlementTeo", b =>
                 {
                     b.Property<int>("SettlementsID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int>("TeoID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("SettlementsID", "TeoID");
 

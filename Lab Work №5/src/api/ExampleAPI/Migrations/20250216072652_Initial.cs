@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace ExampleAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,9 +16,9 @@ namespace ExampleAPI.Migrations
                 name: "filials",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    ID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,9 +29,9 @@ namespace ExampleAPI.Migrations
                 name: "housing_types",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    ID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,10 +42,10 @@ namespace ExampleAPI.Migrations
                 name: "settlements",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    FilialID = table.Column<int>(type: "INTEGER", nullable: true)
+                    ID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    FilialID = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -60,14 +61,14 @@ namespace ExampleAPI.Migrations
                 name: "teos",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Author = table.Column<string>(type: "TEXT", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    DateUpdated = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    FilialID = table.Column<int>(type: "INTEGER", nullable: true),
-                    HousingTypeID = table.Column<int>(type: "INTEGER", nullable: true)
+                    ID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Author = table.Column<string>(type: "text", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FilialID = table.Column<int>(type: "integer", nullable: true),
+                    HousingTypeID = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -88,8 +89,8 @@ namespace ExampleAPI.Migrations
                 name: "SettlementTeo",
                 columns: table => new
                 {
-                    SettlementsID = table.Column<int>(type: "INTEGER", nullable: false),
-                    TeoID = table.Column<int>(type: "INTEGER", nullable: false)
+                    SettlementsID = table.Column<int>(type: "integer", nullable: false),
+                    TeoID = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

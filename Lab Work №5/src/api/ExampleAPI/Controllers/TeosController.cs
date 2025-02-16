@@ -17,11 +17,11 @@ namespace ExampleAPI.Controllers
 
         static readonly Dictionary<string, string> OrderByMapping = new Dictionary<string, string>
         {
-            { "name", "teo.Name" },
-            { "author", "teo.Author" },
-            { "filial", "filial.Name" },
-            { "date_created", "teo.DateCreated" },
-            { "date_updated", "teo.DateUpdated" }
+            { "name", "teo.\"Name\"" },
+            { "author", "teo.\"Author\"" },
+            { "filial", "filial.\"Name\"" },
+            { "date_created", "teo.\"DateCreated\"" },
+            { "date_updated", "teo.\"DateUpdated\"" }
         };
 
         // GET: teos
@@ -42,10 +42,8 @@ namespace ExampleAPI.Controllers
             else if (!OrderByMapping.TryGetValue(sortBy, out sortBy))
                 return BadRequest(new { invalid_params = new string[] { "sortBy" } });
 
-            Console.WriteLine($"SELECT teo.* FROM teos AS teo INNER JOIN filials AS filial ORDER BY {sortBy} {sortOrder} LIMIT {count} OFFSET {skip}");
-
             var res = await _context.Teos.FromSqlRaw(
-                $"SELECT teo.* FROM teos AS teo INNER JOIN filials AS filial ORDER BY {sortBy} {sortOrder} LIMIT {count} OFFSET {skip}"
+                $"SELECT teo.* FROM teos AS teo INNER JOIN filials AS filial ON teo.\"FilialID\" = filial.\"ID\" ORDER BY {sortBy} {sortOrder} LIMIT {count} OFFSET {skip}"
             ).Select(teo => new TeoDto()
             {
                 id = teo.ID,
