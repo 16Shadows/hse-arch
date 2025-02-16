@@ -1,5 +1,5 @@
 services:
-  server:
+  example-api:
     container_name: example-api
     build:
       context: ./ExampleAPI
@@ -15,6 +15,7 @@ services:
       POSTGRES_PASSWORD: 123456
       POSTGRES_PORT: 5432
       POSTGRES_USER: ExampleAPI
+      AUTH_SERVER: auth-api
     depends_on:
       postgres-example-api:
         condition: service_healthy
@@ -43,9 +44,51 @@ services:
           memory: 4G
     networks:
       - hse-arch
+  auth-api:
+    container_name: auth-api
+    build:
+      context: ./AuthAPI
+      dockerfile: Dockerfile
+    networks:
+      - hse-arch
+    environment:
+      POSTGRES_DATABASE: AuthAPI
+      POSTGRES_HOST: postgres-auth-api
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: AuthAPI
+    depends_on:
+      postgres-auth-api:
+        condition: service_healthy
+  postgres-auth-api:
+    container_name: postgres-auth-api
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: AuthAPI
+      POSTGRES_USER: AuthAPI
+      POSTGRES_PASSWORD: 123456
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./AuthAPI/MigrationScripts:/docker-entrypoint-initdb.d
+      - hse-arch-postgres-auth-api-db:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U AuthAPI -d AuthAPI
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - hse-arch
 
 volumes:
-  hse-arch-postgres-example-api-db: 
+  hse-arch-postgres-example-api-db:
+  hse-arch-postgres-auth-api-db:
      
 networks:
   hse-arch:

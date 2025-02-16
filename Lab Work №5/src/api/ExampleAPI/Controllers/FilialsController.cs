@@ -1,4 +1,5 @@
-﻿using ExampleAPI.Model;
+﻿using ExampleAPI.Middleware;
+using ExampleAPI.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +30,7 @@ namespace ExampleAPI.Controllers
 		}
 		
 		[HttpGet("{id}/settlements")]
+        [AuthPermission("teo.get")]
 		public async Task<ActionResult> GetSettlements(int id)
 		{
 			var filial = await _context.Filials.Where(x => x.ID == id).FirstOrDefaultAsync();

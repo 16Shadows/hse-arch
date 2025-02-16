@@ -1,3 +1,4 @@
+using ExampleAPI.Middleware;
 using ExampleAPI.Model;
 
 namespace ExampleAPI
@@ -24,10 +25,8 @@ namespace ExampleAPI
 				app.UseSwaggerUI();
 			}
 
-			app.UseHttpsRedirection();
-
-			app.UseAuthorization();
-
+			string authServer = Environment.GetEnvironmentVariable("AUTH_SERVER")!;
+			app.UseAuthMiddleware((username, permission) => $"http://{authServer}/users/{username}/permissions/{permission}");
 			app.MapControllers();
 
 			app.Run();
