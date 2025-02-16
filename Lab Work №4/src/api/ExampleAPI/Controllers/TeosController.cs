@@ -42,6 +42,8 @@ namespace ExampleAPI.Controllers
             else if (!OrderByMapping.TryGetValue(sortBy, out sortBy))
                 return BadRequest(new { invalid_params = new string[] { "sortBy" } });
 
+            Console.WriteLine($"SELECT teo.* FROM teos AS teo INNER JOIN filials AS filial ORDER BY {sortBy} {sortOrder} LIMIT {count} OFFSET {skip}");
+
             var res = await _context.Teos.FromSqlRaw(
                 $"SELECT teo.* FROM teos AS teo INNER JOIN filials AS filial ORDER BY {sortBy} {sortOrder} LIMIT {count} OFFSET {skip}"
             ).Select(teo => new TeoDto()
@@ -230,7 +232,7 @@ namespace ExampleAPI.Controllers
             if (data.name == null && data.author == null && data.settlements == null && data.housing_type == null && data.filial == null)
                 return BadRequest();
 
-            var teo = await _context.Teos.Include(x => x.Filial).FirstOrDefaultAsync(x => x.ID == id);
+            var teo = await _context.Teos.Include(x => x.Filial).Include(x => x.HousingType).Include(x => x.Settlements).FirstOrDefaultAsync(x => x.ID == id);
             if (teo == null)
                 return NotFound();
 
