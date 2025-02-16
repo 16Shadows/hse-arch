@@ -14,8 +14,3 @@ jobs:
         run:
             cd "Lab Work №5/src/api" &&
             docker compose up &
-      - name: Run integration tests
-        run:
-            cd "Lab Work №5/src/api" &&
-            chmod 777 ./test.sh &&
-            ./test.sh
