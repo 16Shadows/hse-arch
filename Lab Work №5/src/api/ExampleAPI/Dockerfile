@@ -1,7 +1,8 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS aspnet_build
 WORKDIR /aspnet_app
-COPY . .
+COPY ./ExampleAPI.csproj .
 RUN dotnet restore ExampleAPI.csproj
+COPY . .
 RUN dotnet build "ExampleAPI.csproj" -c Release -o /aspnet_app/build
 RUN dotnet publish "ExampleAPI.csproj" -c Release -o /aspnet_app/publish /p:UseAppHost=false
 

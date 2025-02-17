@@ -1,7 +1,8 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS aspnet_build
 WORKDIR /aspnet_app
-COPY . .
+COPY ./AuthAPI.csproj .
 RUN dotnet restore AuthAPI.csproj
+COPY . .
 RUN dotnet build "AuthAPI.csproj" -c Release -o /aspnet_app/build
 RUN dotnet publish "AuthAPI.csproj" -c Release -o /aspnet_app/publish /p:UseAppHost=false
 
