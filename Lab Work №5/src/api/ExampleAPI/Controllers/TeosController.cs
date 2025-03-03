@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Model;
+using ExampleAPI.Middleware;
 
 namespace ExampleAPI.Controllers
 {
@@ -17,15 +18,16 @@ namespace ExampleAPI.Controllers
 
         static readonly Dictionary<string, string> OrderByMapping = new Dictionary<string, string>
         {
-            { "name", "teo.Name" },
-            { "author", "teo.Author" },
-            { "filial", "filial.Name" },
-            { "date_created", "teo.DateCreated" },
-            { "date_updated", "teo.DateUpdated" }
+            { "name", "teo.\"Name\"" },
+            { "author", "teo.\"Author\"" },
+            { "filial", "filial.\"Name\"" },
+            { "date_created", "teo.\"DateCreated\"" },
+            { "date_updated", "teo.\"DateUpdated\"" }
         };
 
         // GET: teos
         [HttpGet]
+        [AuthPermission("teo.get")]
         public async Task<ActionResult> GetTeos([FromQuery] string? sortBy, [FromQuery] string? sortOrder, [FromQuery] int? count, [FromQuery] int? skip)
         {
             count ??= 10;
@@ -42,10 +44,8 @@ namespace ExampleAPI.Controllers
             else if (!OrderByMapping.TryGetValue(sortBy, out sortBy))
                 return BadRequest(new { invalid_params = new string[] { "sortBy" } });
 
-            Console.WriteLine($"SELECT teo.* FROM teos AS teo INNER JOIN filials AS filial ORDER BY {sortBy} {sortOrder} LIMIT {count} OFFSET {skip}");
-
             var res = await _context.Teos.FromSqlRaw(
-                $"SELECT teo.* FROM teos AS teo INNER JOIN filials AS filial ORDER BY {sortBy} {sortOrder} LIMIT {count} OFFSET {skip}"
+                $"SELECT teo.* FROM teos AS teo INNER JOIN filials AS filial ON teo.\"FilialID\" = filial.\"ID\" ORDER BY {sortBy} {sortOrder} LIMIT {count} OFFSET {skip}"
             ).Select(teo => new TeoDto()
             {
                 id = teo.ID,
@@ -77,6 +77,7 @@ namespace ExampleAPI.Controllers
 
         // POST: teos/5
         [HttpPost]
+        [AuthPermission("teo.create")]
         public async Task<ActionResult> CreateTeo([FromBody] TeoUpdateDto data)
         {
             if (data.name == null)
@@ -227,6 +228,7 @@ namespace ExampleAPI.Controllers
 
         // PATCH: teos/5
         [HttpPatch("{id}")]
+        [AuthPermission("teo.update")]
         public async Task<ActionResult> UpdateTeo(int id, [FromBody] TeoUpdateDto data)
         {
             if (data.name == null && data.author == null && data.settlements == null && data.housing_type == null && data.filial == null)
@@ -347,6 +349,7 @@ namespace ExampleAPI.Controllers
 
         // DELETE: api/Teos/5
         [HttpDelete("{id}")]
+        [AuthPermission("teo.delete")]
         public async Task<ActionResult> DeleteTeo(int id)
         {
             var teo = await _context.Teos.FirstOrDefaultAsync(x => x.ID == id);
