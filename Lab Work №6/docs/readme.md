@@ -14,6 +14,10 @@ sb.Database = Environment.GetEnvironmentVariable("POSTGRES_DATABASE");
 optionsBuilder.UseNpgsql(sb.ToString());
 ```
 
+![builder](https://github.com/user-attachments/assets/7fed231c-9f53-49da-a61b-9e5ee94f0be4)
+
+Один из примеров использования паттерна билдера в коде - создание строки подключения к БД. Результирующая строка подключения зависит от конкретной реализации, но параметры одинаковые для ряда БД.
+
 ### Singleton
 ```csharp
 class AuthServerClient
@@ -38,6 +42,11 @@ class AuthServerClient
 	}
 }
 ```
+
+![Singleton](https://github.com/user-attachments/assets/19afbda3-c1f9-4b2f-a87a-1c6b3f610a44)
+
+
+Пример паттерна Singleton.
 
 ## Структурные шаблоны
 
@@ -98,10 +107,13 @@ public class AuthMiddleware
 }
 ```
 
-### Decorator
+![Decorator_Proxy_CoR](https://github.com/user-attachments/assets/513bfe88-30f8-4165-8231-ae6dd73487a2)
 
-middleware добавляет функции
-интерфейс by-convention (есть также явный интерфейс)
+Middleware является Proxy для остальных Middleware и эндпоинта, регулируя доступ к остальным Middleware и эндпоинту.
+В примере кода выше (и ниже) используется by-convention интерфейс Middleware, т.к. он позволяет передать в конструктор дополнительные аргументы при добавлениии в приложение.
+Также существует явный интерфейс IMiddleware.
+
+### Decorator
 
 ```csharp
 public class AuthMiddleware
@@ -155,13 +167,15 @@ public class AuthMiddleware
 	}
 }
 ```
+
+![Decorator_Proxy_CoR](https://github.com/user-attachments/assets/513bfe88-30f8-4165-8231-ae6dd73487a2)
+
+Middleware является декоратором для самого себя, позволяя добавлять дополнительную обработку к запросу.
 
 ## Поведенческие шаблоны
 
 ### Chain of Responsibility
 
-next
-
 ```csharp
 public class AuthMiddleware
 {
@@ -214,11 +228,13 @@ public class AuthMiddleware
 	}
 }
 ```
+
+![Decorator_Proxy_CoR](https://github.com/user-attachments/assets/513bfe88-30f8-4165-8231-ae6dd73487a2)
+
+Middleware реализует паттерн Chain Of Responsibility, позволяя нескольким Middleware обрабатывать запрос или передавать его далее.
 
 ### Iterator
 
-foreach
-
 ```csharp
 public class AuthMiddleware
 {
@@ -272,9 +288,11 @@ public class AuthMiddleware
 }
 ```
 
-### Template method
+![Iterator](https://github.com/user-attachments/assets/883e456a-6248-4672-9754-2632d4d80425)
 
-OnModelCreating
+В коде AuthMiddleware используется паттерн итератора (IEnumerator) через языковую конструкцию foreach.
+
+### Template method
 
 ```csharp
 public class DatabaseContext : DbContext
@@ -320,9 +338,11 @@ public class DatabaseContext : DbContext
 }
 ```
 
-### Strategy
+![Диаграмма без названия-TemplateMethod](https://github.com/user-attachments/assets/16988e8e-dbbb-4588-8c61-8990c11be33d)
 
-getAuthRoute
+В процессе инициализации сессии БД в entity framework вызывается шаблонный метод OnModelCreating, в котором настраивается структура модели данных.
+
+### Strategy
 
 ```csharp
 public class AuthMiddleware
@@ -376,3 +396,7 @@ public class AuthMiddleware
 	}
 }
 ```
+
+![Strategy](https://github.com/user-attachments/assets/7796bf0b-c1f2-4351-b577-3249826b195a)
+
+Паттерн Strategy используется в AuthMiddleware. При создании объекта в него передаётся алгоритм формирования пути к серверу авторизации.
